@@ -80,6 +80,10 @@ def load_data_one(file):
 def load_data(files, data_dir, label_count):
     global image_size, img_channels
     data, labels = load_data_one(data_dir + '/' + files[0])
+    print('data shape is ')
+    print(np.shape(data))
+    print('label shpae is ')
+    print(np.shape(labels))
     for f in files[1:]:
         data_n, labels_n = load_data_one(data_dir + '/' + f)
         data = np.append(data, data_n, axis=0)
@@ -87,21 +91,43 @@ def load_data(files, data_dir, label_count):
     labels = np.array([[float(i == label) for i in range(label_count)] for label in labels])
     data = data.reshape([-1, img_channels, image_size, image_size])
     data = data.transpose([0, 2, 3, 1])
+    print('data shape is ')
+    print(np.shape(data))
+    print('label shpae is ')
+    print(np.shape(labels))
     return data, labels
 
 
 def prepare_data():
     print("======Loading data======")
     download_data()
-    data_dir = './cifar-10-batches-py'
+    data_dir = './SENet/cifar-10-batches-py'
     image_dim = image_size * image_size * img_channels
     meta = unpickle(data_dir + '/batches.meta')
 
     label_names = meta[b'label_names']
     label_count = len(label_names)
+    ##
+    print('meta is ')
+    print(meta)
+    print('label names are ')
+    print(label_names)
+    print('label count are ')
+    print(label_count)
+    ##
     train_files = ['data_batch_%d' % d for d in range(1, 6)]
     train_data, train_labels = load_data(train_files, data_dir, label_count)
     test_data, test_labels = load_data(['test_batch'], data_dir, label_count)
+
+    ##
+    print('train_files are ')
+    print(train_files)
+    print('train_data are ')
+    print(train_data)
+    print('train_labels are ')
+    print(train_labels)
+
+    ##
 
     print("Train data:", np.shape(train_data), np.shape(train_labels))
     print("Test data :", np.shape(test_data), np.shape(test_labels))
